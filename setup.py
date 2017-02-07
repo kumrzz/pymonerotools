@@ -12,7 +12,18 @@ setup(name='pymonerotools',
       version=version.PYMONEROTOOLS_VERSION,
       install_requires=[
           'requests',
+          'Crypto',
       ],
+      packages=['pymonerotools'],
+      package_dir={
+          'pymonerotools': 'lib',
+      },
+      package_data={#electrum style (not pybtctools data_files) coz of english.txt usage
+          'pymonerotools': [
+                'wordlist/*.txt',
+            ]
+      },
+      scripts=['pyxmrtool'],
       description='monero tools in python emulating monero C++ code',
       long_description='monero tools in python using code lifted from/emulating the monero C++ libraries',
       keywords='monero tools python',
@@ -20,7 +31,6 @@ setup(name='pymonerotools',
       author='Kumar Ghosh',
       author_email='bogusmailaddy@wont.work',
       license='MIT',
-      packages=['funniest'],
       classifiers=[
         'Development Status :: 0.1 - Alpha',
         'License :: OSI Approved :: MIT License',
