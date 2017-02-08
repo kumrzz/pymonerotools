@@ -11,7 +11,7 @@ if sys.version_info[:3] < (2, 7, 0):
 setup(name='pymonerotools',
       version=version.PYMONEROTOOLS_VERSION,
       install_requires=[
-          'requests',
+          'zlib',
           'Crypto',
       ],
       packages=['pymonerotools'],

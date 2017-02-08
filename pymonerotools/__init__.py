@@ -1,2 +1,3 @@
-from .text import joke
-from mnemonic import Mnemonic
+import toolz
+from .sc_reduce32 import sc_reduce32
+import tests
