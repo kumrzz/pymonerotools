@@ -1,4 +1,5 @@
-from toolz import *
+from toolz import monerorandseedphrase, recoverSK, prvviewkeyfrmhexseed
+from toolz import sc_reduce_key, publicFromSecret, encode_addr
 
 def test1():
     randseedphrase = monerorandseedphrase()

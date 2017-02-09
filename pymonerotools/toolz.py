@@ -5,13 +5,11 @@ import math
 import unicodedata
 import binascii #conversion between hex, int, and binary. Also for the crc32 thing
 
-import ecdsa
 import Crypto.Random.random as cryptorandom
 import zlib
 import Keccak, ed25519#in this library
 
 from electrum.util import print_error
-from electrum.bitcoin import is_old_seed, is_new_seed
 
 netVersion = '12'#network byte:12 for mainnet, 35 for testnet
 
@@ -86,7 +84,7 @@ class Mnemonic(object):
 #end of Class Mnemonic------------------------------
 
 
-def cn_fast_hash(s):
+def cn_fast_hash(s):#Keccak-256 hashing
     k = Keccak.Keccak()
     return k.Keccak((len(s) * 4, s), 1088, 512, 32 * 8, False).lower()
     #r = bitrate = 1088, c = capacity, n = output length in bits
@@ -165,10 +163,10 @@ def b58encode(v):
 
 
 def encode_addr(version, spendP, viewP):
-    buf = version + spendP + viewP
-    h = cn_fast_hash(buf)
-    buf = buf +  h[0:8]
-    return b58encode(buf)
+    buf = version + spendP + viewP#networkbyte+spendpubkey+viewpubkey
+    h = cn_fast_hash(buf)##Keccak-256 hashing
+    buf = buf +  h[0:8]#first 4 bytes from above appended to 'buf'
+    return b58encode(buf)#Base58-encoding
 
 
 def addrfrmseedhex(sk):#accepts Hex seed and returns public address
