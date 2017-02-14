@@ -232,14 +232,12 @@ def electrumChecksum(seedinit):
 
     return wl[z2]
 
-def integratedaddy(spendpubkey, viewpubkey, pymtIDhex=''):
-    #super strange how
+def integratedaddy(spendpubkey, viewpubkey):
     net_version = '13'
-    if pymtIDhex == '': pymtIDhex = randpymtidhex()
-    print 'rand pymtIDhex: ' , pymtIDhex
     buf = net_version + spendpubkey + viewpubkey + pymtIDhex#networkbyte+spendpubkey+viewpubkey_pymtID
     h = cn_fast_hash(buf)##Keccak-256 hashing
     buf2 = buf +  h[0:8]#first 4 bytes from above appended to 'buf'
+    #super strange how simple b58encode doesn't yield a replicable address
     return b58encode(buf2[:144])+b58encode(buf2[143:])#Base58-encoding
 
 def addrfrmseedphrase(seedphrase):
@@ -250,7 +248,7 @@ def addrfrmseedphrase(seedphrase):
 def monerorandseedhex():#nicked from mininero.PaperWallet.skGen
     return intToHex(8 * (cryptorandom.getrandbits(64 * 8)) % l)
 
-def randpymtidhex():
+def randpaymentidhex():
     return intToHex(cryptorandom.getrandbits(64))[:16]
 
 def mn_encode( message ):
