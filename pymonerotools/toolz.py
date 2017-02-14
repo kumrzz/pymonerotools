@@ -162,19 +162,19 @@ def b58encode(v):
     return res
 
 
-def encode_addr(version, spendP, viewP):
-    buf = version + spendP + viewP#networkbyte+spendpubkey+viewpubkey
+def addr_frmpubkeys(spendP, viewP):
+    buf = netVersion + spendP + viewP#networkbyte+spendpubkey+viewpubkey
     h = cn_fast_hash(buf)##Keccak-256 hashing
     buf = buf +  h[0:8]#first 4 bytes from above appended to 'buf'
     return b58encode(buf)#Base58-encoding
 
 
-def addrfrmseedhex(sk):#accepts Hex seed and returns public address
-    vk = prvviewkeyfrmhexseed(sk)
-    sk = sc_reduce_key(sk)
-    pk = publicFromSecret(sk)
-    pvk = publicFromSecret(vk)
-    return encode_addr(netVersion, pk, pvk)
+def addrfrmseedhex(seedhex):#accepts Hex seed and returns public address
+    privviewkey = prvviewkeyfrmhexseed(seedhex)
+    privspendkey = sc_reduce_key(seedhex)
+    pubspendkey = publicFromSecret(privspendkey)
+    pubviewkey = publicFromSecret(privviewkey)
+    return addr_frmpubkeys(pubspendkey, pubviewkey)
 
 
 def mnemonic_encode(self, i):
@@ -232,6 +232,15 @@ def electrumChecksum(seedinit):
 
     return wl[z2]
 
+def integratedaddy(spendpubkey, viewpubkey, pymtIDhex=''):
+    #super strange how
+    net_version = '13'
+    if pymtIDhex == '': pymtIDhex = randpymtidhex()
+    print 'rand pymtIDhex: ' , pymtIDhex
+    buf = net_version + spendpubkey + viewpubkey + pymtIDhex#networkbyte+spendpubkey+viewpubkey_pymtID
+    h = cn_fast_hash(buf)##Keccak-256 hashing
+    buf2 = buf +  h[0:8]#first 4 bytes from above appended to 'buf'
+    return b58encode(buf2[:144])+b58encode(buf2[143:])#Base58-encoding
 
 def addrfrmseedphrase(seedphrase):
     seedhex = recoverSK(seedphrase)
@@ -241,6 +250,8 @@ def addrfrmseedphrase(seedphrase):
 def monerorandseedhex():#nicked from mininero.PaperWallet.skGen
     return intToHex(8 * (cryptorandom.getrandbits(64 * 8)) % l)
 
+def randpymtidhex():
+    return intToHex(cryptorandom.getrandbits(64))[:16]
 
 def mn_encode( message ):
     out = []

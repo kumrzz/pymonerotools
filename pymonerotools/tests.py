@@ -1,5 +1,5 @@
 from toolz import monerorandseedphrase, recoverSK, prvviewkeyfrmhexseed
-from toolz import sc_reduce_key, publicFromSecret, encode_addr
+from toolz import sc_reduce_key, publicFromSecret, addr_frmpubkeys
 
 def test1():
     randseedphrase = monerorandseedphrase()
@@ -9,7 +9,7 @@ def test1():
     prvspendkeyreduced = sc_reduce_key(seedhex)
     PublicSpendKey = publicFromSecret(prvspendkeyreduced)
     PublicViewKey = publicFromSecret(prvviewkey)
-    pubaddress = encode_addr(12, PublicSpendKey, PublicViewKey)
+    pubaddress = addr_frmpubkeys(PublicSpendKey, PublicViewKey)
 
     """
     testsk = monerorandseedhex()
