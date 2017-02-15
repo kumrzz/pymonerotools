@@ -11,7 +11,7 @@ import Keccak, ed25519#in this library
 
 from electrum.util import print_error
 
-netVersion = '12'#network byte:12 for mainnet, 35 for testnet
+net_version = '12'#network byte:12 for mainnet, 35 for testnet
 
 # http://www.asahi-net.or.jp/~ax2s-kmtn/ref/unicode/e_asia.html
 CJK_INTERVALS = [
@@ -162,8 +162,9 @@ def b58encode(v):
     return res
 
 
-def addr_frmpubkeys(spendP, viewP):
-    buf = netVersion + spendP + viewP#networkbyte+spendpubkey+viewpubkey
+def addr_frmpubkeys(spendP, viewP, network='mainnet'):
+    net_version = '35' if network=='testnet' else '12'
+    buf = net_version + spendP + viewP#networkbyte+spendpubkey+viewpubkey
     h = cn_fast_hash(buf)##Keccak-256 hashing
     buf = buf +  h[0:8]#first 4 bytes from above appended to 'buf'
     return b58encode(buf)#Base58-encoding
@@ -232,15 +233,15 @@ def electrumChecksum(seedinit):
 
     return wl[z2]
 
-def integratedaddy(spendpubkey, viewpubkey):
-    net_version = '13'
-    buf = net_version + spendpubkey + viewpubkey + pymtIDhex#networkbyte+spendpubkey+viewpubkey_pymtID
+def integratedaddrgen(spendpubkey, viewpubkey, pymtidhex, network='mainnet'):
+    net_version = '36' if network=='testnet' else '13'
+    buf = net_version + spendpubkey + viewpubkey + pymtidhex#networkbyte+spendpubkey+viewpubkey_pymtID
     h = cn_fast_hash(buf)##Keccak-256 hashing
     buf2 = buf +  h[0:8]#first 4 bytes from above appended to 'buf'
     #super strange how simple b58encode doesn't yield a replicable address
     return b58encode(buf2[:144])+b58encode(buf2[143:])#Base58-encoding
 
-def addrfrmseedphrase(seedphrase):
+def addrfrmseedphrase(seedphrase, network='mainnet'):
     seedhex = recoverSK(seedphrase)
     addy = addrfrmseedhex(seedhex)
     return addy
