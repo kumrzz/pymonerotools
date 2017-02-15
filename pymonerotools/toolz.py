@@ -9,7 +9,7 @@ import Crypto.Random.random as cryptorandom
 import zlib
 import Keccak, ed25519#in this library
 
-from electrum.util import print_error
+from electrum import print_error
 
 net_version = '12'#network byte:12 for mainnet, 35 for testnet
 

@@ -10,9 +10,10 @@ if sys.version_info[:3] < (2, 7, 0):
 
 setup(name='pymonerotools',
       version=version.PYMONEROTOOLS_VERSION,
-      install_requires=[
-          'Crypto',
-      ],
+      #install_requires=[
+      #    'Crypto',
+      #    'electrum',
+      #],
       packages=['pymonerotools'],
       package_dir={
           'pymonerotools': 'lib',
