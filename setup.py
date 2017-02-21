@@ -15,9 +15,9 @@ setup(name='pymonerotools',
       #    'electrum',
       #],
       packages=['pymonerotools'],
-      package_dir={
-          'pymonerotools': 'lib',
-      },
+      #package_dir={
+      #    'pymonerotools': 'lib',
+      #},
       package_data={#electrum style (not pybtctools data_files) coz of english.txt usage
           'pymonerotools': [
                 'wordlist/*.txt',
