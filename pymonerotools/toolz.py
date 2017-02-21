@@ -5,7 +5,7 @@ import math
 import unicodedata
 import binascii #conversion between hex, int, and binary. Also for the crc32 thing
 
-import Crypto.Random.random as cryptorandom
+import random as cryptorandom
 import zlib
 import Keccak, ed25519#in this library
 
